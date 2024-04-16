@@ -20,19 +20,16 @@
     </nav>
   </div>
 
-<!--  Панель управления поставщиками -->
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">Постачальники</h1>
-        <p class="lead text-muted">Текст про постачальників. Вони дуже круті! Відповідальні! Не то що моя дружина, як же вона задрала. А я молодець!</p>
-        <p>
-          <a href="/supply/supplier/new" class="btn btn-primary my-2">Додати постачальнка</a>
-          <a href="/supply/supplier/all" class="btn btn-secondary my-2">Подивитися всіх постачальників</a>
-        </p>
-      </div>
-    </div>
-  </section>
+<!-- Форма добавления поставщика -->
+  <div class="container mt-5 mb-5">
+    <h1>Додавання постачальника</h1>
+    <form action="/supply/supplier/new" method="post">
+      <input type="text" name="name" placeholder="Зазначте им'я постачальника" class="form-control"><br>
+      <input type="text" name="contact" placeholder="Зазначте контакт постачальника" class="form-control"><br>
+<!--      <textarea name="full_text" placeholder="Ведите полный текст статьи" class="form-control"></textarea><br>-->
+      <button type="submit" class="btn btn-success">Додати постачальника</button>
+    </form>
+  </div>
 
 </body>
 </html>
