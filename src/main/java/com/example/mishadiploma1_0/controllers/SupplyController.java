@@ -1,7 +1,6 @@
 package com.example.mishadiploma1_0.controllers;
 
 import com.example.mishadiploma1_0.entity.Supply;
-import com.example.mishadiploma1_0.serviceces.SupplierService;
 import com.example.mishadiploma1_0.serviceces.SupplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
