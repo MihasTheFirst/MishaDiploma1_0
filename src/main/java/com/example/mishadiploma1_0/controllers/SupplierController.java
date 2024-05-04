@@ -23,7 +23,7 @@ public class SupplierController {
   @GetMapping("/supply/supplier")
   public String supplierPage(Model model) {
     model.addAttribute("title", "постачальник");
-    return "supply/supplier_main_page";
+    return "supplier/supplier_main_page";
   }
 
   @GetMapping("/supply/supplier/new")
@@ -44,7 +44,7 @@ public class SupplierController {
                                         @PathVariable("id") Long id) {
     Supplier supplier = supplierService.getSupplier(id);
     model.addAttribute("supplier", supplier);
-    return "supply/supplier_edit";
+    return "supplier/supplier_edit";
   }
 
   @PostMapping("/supply/supplier/{id}/edit")
@@ -61,7 +61,7 @@ public class SupplierController {
                                 @PathVariable("id") Long id) {
     Supplier supplier = supplierService.getSupplier(id);
     model.addAttribute("suppliers", supplier);
-    return "supply/supplier_details";
+    return "supplier/supplier_details";
   }
 
   @GetMapping("/supply/supplier/all")
