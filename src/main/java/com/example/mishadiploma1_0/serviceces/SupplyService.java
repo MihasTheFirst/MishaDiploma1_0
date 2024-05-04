@@ -3,11 +3,15 @@ package com.example.mishadiploma1_0.serviceces;
 import com.example.mishadiploma1_0.entity.Product;
 import com.example.mishadiploma1_0.entity.Supplier;
 import com.example.mishadiploma1_0.entity.Supply;
+import com.example.mishadiploma1_0.repositories.ProductRepository;
 import com.example.mishadiploma1_0.repositories.SupplierRepository;
 import com.example.mishadiploma1_0.repositories.SupplyRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -16,14 +20,40 @@ public class SupplyService {
 
   @Autowired
   private SupplyRepository supplyRepository;
+  @Autowired
+  private SupplierRepository supplierRepository;
+  @Autowired
+  private ProductRepository productRepository;
 
-  public Supply addNewSupply(Supplier supplier, List<Product> products) {
+  public void addNewSupply(Long idOfSupplier,
+                             List<String> name,
+                             List<BigDecimal> price,
+                             List<Long> quantity) {
+    Supplier supplier = supplierRepository.findById(idOfSupplier)
+                                          .orElseThrow(NoSuchElementException::new);
+
+    List<Product> products = new ArrayList<>();
+
+    int size = name.size();
+    for (int i = 0; i < size; i++) {
+      Product product = Product.builder()
+                               .name(name.get(i))
+                               .pricePerOne(price.get(i))
+                               .amount(quantity.get(i))
+                               .build();
+
+      productRepository.save(product);
+
+      products.add(product);
+    }
+
     Supply supply = Supply.builder()
-            .supplier(supplier)
+//            .supplier(supplier)
             .products(products)
             .build();
 
-    return supplyRepository.save(supply);
+    Supply savedSupply = supplyRepository.save(supply);
+    supplyRepository.attachSupplierToSupply(savedSupply.getId(), idOfSupplier);
   }
 
   public Supply getSupply(Long id) {

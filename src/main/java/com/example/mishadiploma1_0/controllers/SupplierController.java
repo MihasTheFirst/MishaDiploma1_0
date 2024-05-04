@@ -28,7 +28,7 @@ public class SupplierController {
 
   @GetMapping("/supply/supplier/new")
   public String addNewSupplier(Model model) {
-    return "supply/supplier_add";
+    return "supplier/supplier_add";
   }
 
   @PostMapping("/supply/supplier/new")
@@ -68,7 +68,7 @@ public class SupplierController {
   public String getAllSuppliers(Model model) {
     Iterable<Supplier> suppliers = supplierService.getAllSuppliers();
     model.addAttribute("suppliers", suppliers);
-    return "supply/supplier_details";
+    return "supplier/supplier_details";
   }
 
   @GetMapping("/supply/supplier/{id}/delete")

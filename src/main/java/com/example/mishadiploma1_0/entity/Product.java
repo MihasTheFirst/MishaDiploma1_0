@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -24,7 +26,7 @@ public class Product {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
   private String name;
-  private double pricePerOne;
+  private BigDecimal pricePerOne;
   private Long amount;
 
 }

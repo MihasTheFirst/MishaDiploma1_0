@@ -8,6 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 public class SupplyController {
@@ -26,10 +30,13 @@ public class SupplyController {
   }
 
   @PostMapping("/supply/new")
-  public String createNewSupply(Model model, @RequestBody Supply supply) {
-    supplyService.addNewSupply(supply.getSupplier(), supply.getProducts());
-    // TODO: call StorageController.saveProducts
-    return "redirect:/";
+  public String createNewSupply(Model model,
+                                @RequestParam Long idOfSupplier,
+                                @RequestParam List<String> name,
+                                @RequestParam List<BigDecimal> price,
+                                @RequestParam List<Long> quantity) {
+    supplyService.addNewSupply(idOfSupplier, name, price, quantity);
+    return "redirect:/supply";
   }
   @GetMapping("/supply/all")
   public String getAllSupplies(Model model) {

@@ -20,6 +20,19 @@
     </nav>
   </div>
 
-  <p th:text="'Hello, ' + ${title} + '!'"></p>
+  <!--  Панель управления поставкой -->
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Поставки</h1>
+        <p class="lead text-muted">Текст про поставки.</p>
+        <p>
+          <a href="/supply/new" class="btn btn-primary my-2">Додати поставку</a>
+          <a href="/supply/all" class="btn btn-secondary my-2">Подивитися всі поставки</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
 </body>
 </html>

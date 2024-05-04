@@ -24,18 +24,17 @@
 <div class="container mt-5 mb-5">
     <h1>Додавання поставки</h1>
     <form action="/supply/new" method="post">
-        <input type="text" name="id" placeholder="Зазначте id постачальника" class="form-control"><br>
-        <input type="text" name="products" placeholder="Зазначте продукти" class="form-control"><br>
+        <input type="text" name="idOfSupplier" placeholder="Зазначте id постачальника" class="form-control"><br>
         <div id="productContainer">
             <div class="Product">
-                <input type="text" name="products[0].name" placeholder="Зазначте ім'я товару" class="form-control"><br>
-                <input type="text" name="products[0].pricePerOne" placeholder="Зазначте ціну" class="form-control"><br>
-                <input type="text" name="products[0].amount" placeholder="Зазначте кількість" class="form-control"><br>
+                <input type="text" name="name" placeholder="Зазначте ім'я товару" class="form-control"><br>
+                <input type="text" name="price" placeholder="Зазначте ціну" class="form-control"><br>
+                <input type="text" name="quantity" placeholder="Зазначте кількість" class="form-control"><br>
             </div>
         </div>
-        <button type="button" onclick="addProductContainer()">Додати продукт</button>
-        <br><br>
-        <button type="submit" class="btn btn-success">Додати постачальника</button>
+        <button type="button" onclick="addProductContainer()" class="btn btn-secondary my-2">Додати продукт</button>
+        <br>
+        <button type="submit" class="btn btn-success">Готово</button>
     </form>
 </div>
 
@@ -46,9 +45,9 @@
             const container = document.createElement('div');
             container.className = 'productContainer';
             container.innerHTML = `
-                <input type="text" name="products[${productIndex}].name" placeholder="Зазначте ім'я товару" class="form-control"><br>
-                <input type="text" name="products[${productIndex}].pricePerOne" placeholder="Зазначте ціну" class="form-control"><br>
-                <input type="text" name="products[${productIndex}].amount" placeholder="Зазначте кількість" class="form-control"><br>
+                <input type="text" name="name" placeholder="Зазначте ім'я товару" class="form-control"><br>
+                <input type="text" name="price" placeholder="Зазначте ціну" class="form-control"><br>
+                <input type="text" name="quantity" placeholder="Зазначте кількість" class="form-control"><br>
             `;
             document.getElementById('productContainer').appendChild(container);
             productIndex++;
