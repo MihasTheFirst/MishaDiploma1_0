@@ -29,8 +29,8 @@ public class Supply {
   private Long id;
   @OneToOne
   private Supplier supplier;
-  @OneToMany
-  private List<Product> products;
+  @OneToMany(mappedBy = "supply")
+  private List<ProductPerSupply> products;
   @Column
   private LocalDateTime date;
 
