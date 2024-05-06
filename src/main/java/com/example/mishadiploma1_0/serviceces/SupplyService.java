@@ -40,7 +40,6 @@ public class SupplyService {
 
     int size = name.size();
     for (int i = 0; i < size; i++) {
-
       Optional<Product> product = productRepository.updateAmountOfProductIfExists(quantity.get(i),
                                                                                   name.get(i),
                                                                                   price.get(i));
