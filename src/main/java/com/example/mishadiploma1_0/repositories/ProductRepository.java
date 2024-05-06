@@ -1,7 +1,6 @@
 package com.example.mishadiploma1_0.repositories;
 
 import com.example.mishadiploma1_0.entity.Product;
-import com.example.mishadiploma1_0.entity.Storage;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;

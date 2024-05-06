@@ -7,7 +7,6 @@ import com.example.mishadiploma1_0.repositories.ProductRepository;
 import com.example.mishadiploma1_0.repositories.SupplierRepository;
 import com.example.mishadiploma1_0.repositories.SupplyRepository;
 import jakarta.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,30 +32,10 @@ public class SupplyService {
                              List<String> name,
                              List<BigDecimal> price,
                              List<Long> quantity) {
-    Supplier supplier = supplierRepository.findById(idOfSupplier)
-                                          .orElseThrow(NoSuchElementException::new);
+    Supplier supplier = this.findSupplierById(idOfSupplier);
 
-    List<Product> products = new ArrayList<>();
-
-    int size = name.size();
-    for (int i = 0; i < size; i++) {
-      Optional<Product> product = productRepository.updateAmountOfProductIfExists(quantity.get(i),
-                                                                                  name.get(i),
-                                                                                  price.get(i));
-      if (product.isPresent()) {
-        products.add(product.get());
-      } else {
-        product = Optional.of(Product.builder()
-                                     .name(name.get(i))
-                                     .pricePerOne(price.get(i))
-                                     .amount(quantity.get(i))
-                                     .build());
-
-        productRepository.save(product.get());
-
-        products.add(product.get());
-      }
-    }
+    List<Product> products = this.getProductsWhichWereDeliveredBySupply(name, price,
+        quantity);
 
     Supply supply = Supply.builder()
                           .supplier(supplier)
@@ -75,8 +54,12 @@ public class SupplyService {
     return supplyRepository.findAll();
   }
 
-  public Supply updateExistingSupply(Long id, Supplier supplier, List<Product> products) {
+  public Supply updateExistingSupply(Long id, Long idOfSupplier, List<String> name, List<BigDecimal> price,
+      List<Long> quantity) {
     Supply supply = this.getSupply(id);
+
+    Supplier supplier = this.findSupplierById(idOfSupplier);
+    List<Product> products = this.getProductsWhichWereDeliveredBySupply(name, price, quantity);
     supply.setSupplier(supplier);
     supply.setProducts(products);
     return supplyRepository.save(supply);
@@ -85,6 +68,37 @@ public class SupplyService {
   public void deleteSupply(Long id) {
     Supply supply = this.getSupply(id);
     supplyRepository.delete(supply);
+  }
+
+  private Supplier findSupplierById(Long idOfSupplier) {
+    return supplierRepository.findById(idOfSupplier)
+                             .orElseThrow(NoSuchElementException::new);
+  }
+
+  private List<Product> getProductsWhichWereDeliveredBySupply(List<String> name, List<BigDecimal> price,
+      List<Long> quantity) {
+    List<Product> products = new ArrayList<>();
+
+    int size = name.size();
+    for (int i = 0; i < size; i++) {
+      Optional<Product> product = productRepository.updateAmountOfProductIfExists(quantity.get(i),
+          name.get(i),
+          price.get(i));
+      if (product.isPresent()) {
+        products.add(product.get());
+      } else {
+        product = Optional.of(Product.builder()
+            .name(name.get(i))
+            .pricePerOne(price.get(i))
+            .amount(quantity.get(i))
+            .build());
+
+        productRepository.save(product.get());
+
+        products.add(product.get());
+      }
+    }
+    return products;
   }
 
 }
