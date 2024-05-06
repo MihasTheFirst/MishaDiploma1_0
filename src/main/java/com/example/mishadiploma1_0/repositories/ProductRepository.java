@@ -24,6 +24,4 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
   Optional<Product> updateAmountOfProductIfExists(@Param("amount") Long amount,
                                                   @Param("name") String name,
                                                   @Param("price_per_one") BigDecimal price);
-  Optional<Product> updateByPricePerOne(BigDecimal price);
-
 }
