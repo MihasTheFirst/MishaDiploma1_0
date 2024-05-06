@@ -60,10 +60,10 @@ public class SupplyService {
     }
 
     Supply supply = Supply.builder()
-            .supplier(supplier)
-            .products(products)
-            .date(LocalDateTime.now())
-            .build();
+                          .supplier(supplier)
+                          .products(products)
+                          .date(LocalDateTime.now())
+                          .build();
 
      supplyRepository.save(supply);
   }
