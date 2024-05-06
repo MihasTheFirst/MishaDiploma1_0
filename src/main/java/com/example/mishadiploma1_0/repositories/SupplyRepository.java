@@ -9,11 +9,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SupplyRepository extends CrudRepository<Supply, Long> {
 
-    @Query(value = """
-    UPDATE supply 
-    SET supplier_id = :supplier_id 
-    WHERE id = :id
-    """, nativeQuery = true)
-    void attachSupplierToSupply(@Param("id") Long id,
-                                @Param("supplier_id") Long idOfSupplier);
 }

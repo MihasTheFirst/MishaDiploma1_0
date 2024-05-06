@@ -1,6 +1,8 @@
 package com.example.mishadiploma1_0.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,5 +31,7 @@ public class Supply {
   private Supplier supplier;
   @OneToMany
   private List<Product> products;
+  @Column
+  private LocalDateTime date;
 
 }
