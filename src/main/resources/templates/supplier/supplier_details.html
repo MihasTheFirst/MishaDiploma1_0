@@ -24,8 +24,8 @@
   <div class="container mt-5">
     <div th:each="el : ${suppliers}" class="alert alert-info mt-2">
       <h1 th:text="${el.name}"/>
-      <p th:text="${el.contact}"/>
-<!--      <p><b>Просмотры</b> <span th:text="${el.views}"/></p>-->
+      <p> Контакт: <span th:text="${el.contact}"></span></p>
+      <p> Системний ідентифікаційний номер: <span th:text="${el.id}"></span></p>
       <form method="post">
         <a th:href="'/supply/supplier/' + ${el.id} + '/edit'" class="btn btn-warning">Редагувати</a>
         <a th:href="'/supply/supplier/' + ${el.id} + '/delete'" class="btn btn-warning">Видалити</a>

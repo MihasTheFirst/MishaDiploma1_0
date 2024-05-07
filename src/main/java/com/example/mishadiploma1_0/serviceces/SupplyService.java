@@ -113,7 +113,7 @@ public class SupplyService {
     List<ProductPerSupply> savedProductPerSupplies = new ArrayList<>(supply.getProducts());
 
     // update values in the Storage
-    this.updateQuantityOfProduct(savedProductPerSupplies);
+    this.updateQuantityOfProductDel(savedProductPerSupplies);
 
     try {
       // delete ProductPerSupply by id
@@ -143,7 +143,7 @@ public class SupplyService {
   }
 
   // Update values in the Storage if Supply were deleted
-  private void updateQuantityOfProduct(List<ProductPerSupply> products) {
+  private void updateQuantityOfProductDel(List<ProductPerSupply> products) {
     for(int i = 0; i < products.size(); i++) {
       productRepository.updateAmountAndPriceOfProductIfExists(
           products.get(i).getAmount() * -1,
