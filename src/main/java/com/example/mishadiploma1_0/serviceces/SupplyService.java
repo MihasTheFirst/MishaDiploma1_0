@@ -39,20 +39,26 @@ public class SupplyService {
                            List<String> name,
                            List<BigDecimal> price,
                            List<Long> quantity) {
+    // find Suplier by id
     Supplier supplier = this.findSupplierById(idOfSupplier);
 
+    // create new Supply
     Supply supply = Supply.builder()
                           .supplier(supplier)
                           .date(LocalDateTime.now())
                           .build();
 
+    // save the Supply in db
     Supply savedSupply = supplyRepository.save(supply);
 
+    // create list ProductPerSupply from names, prices, quantities
     List<ProductPerSupply> products = this.getListOfProducts(savedSupply, name, price, quantity);
     savedSupply.setProducts(products);
 
+    // updaete Supply with set ProductPerSupply
     supplyRepository.save(savedSupply);
 
+    // update values in storage
     this.saveProductsWhichWereDeliveredBySupply(products);
   }
 
@@ -66,19 +72,25 @@ public class SupplyService {
 
   public void updateExistingSupply(Long id, Long idOfSupplier, List<BigDecimal> price,
       List<Long> quantity) {
+    // find Supply by id
     Supply supplyFromDb = this.getSupply(id);
 
+    // list of all products that were attached to the particular Supply -> supplyFromDb
     List<ProductPerSupply> savedProductPerSupply = new ArrayList<>(supplyFromDb.getProducts());
 
+    // find Supplier by id
     Supplier supplier = this.findSupplierById(idOfSupplier);
     supplyFromDb.setSupplier(supplier);
 
     try {
+      // delete supplyFromDb to create it anew
       productPerSupplyRepository.deleteBySupplyId(supplyFromDb.getId());
     } catch (Exception ex) { }
 
+    // create new Supply with new parameters
     supplyRepository.save(supplyFromDb);
 
+    // create updated ProductPerSupply and save it
     List<ProductPerSupply> products = this.getListOfProducts(supplyFromDb,
         savedProductPerSupply.stream().map(ProductPerSupply::getName).collect(
         Collectors.toList()),
@@ -86,22 +98,29 @@ public class SupplyService {
         quantity);
     supplyFromDb.setProducts(products);
 
+    // save updated Supply with new ProductPerSupply
     supplyRepository.save(supplyFromDb);
 
+    // update values in the Storage
     this.updateQuantityOfProduct(savedProductPerSupply, products);
   }
 
   public void deleteSupply(Long id) {
+    // find Suppl by id
     Supply supply = this.getSupply(id);
 
+    // list of all products that were attached to the particular Supply -> supply
     List<ProductPerSupply> savedProductPerSupplies = new ArrayList<>(supply.getProducts());
 
+    // update values in the Storage
     this.updateQuantityOfProduct(savedProductPerSupplies);
 
     try {
+      // delete ProductPerSupply by id
       productPerSupplyRepository.deleteBySupplyId(supply.getId());
     } catch (Exception ex) { }
 
+    // delete Supply
     supplyRepository.deleteById(supply.getId());
   }
 
@@ -110,6 +129,7 @@ public class SupplyService {
                              .orElseThrow(NoSuchElementException::new);
   }
 
+  // Update values in the Storage if Supply were updated
   private void updateQuantityOfProduct(List<ProductPerSupply> savedProducts,
                                        List<ProductPerSupply> newProducts) {
     for(int i = 0; i < newProducts.size(); i++) {
@@ -122,6 +142,7 @@ public class SupplyService {
     }
   }
 
+  // Update values in the Storage if Supply were deleted
   private void updateQuantityOfProduct(List<ProductPerSupply> products) {
     for(int i = 0; i < products.size(); i++) {
       productRepository.updateAmountAndPriceOfProductIfExists(
@@ -134,6 +155,9 @@ public class SupplyService {
       productRepository.removeEmptySpaces();
     } catch (Exception ex) { }
   }
+
+  // create list of ProductPerSupply from lists of names, prices and quantities
+  // that we get from UI
   private List<ProductPerSupply> getListOfProducts(Supply supply,
                                                    List<String> name,
                                                    List<BigDecimal> price,
@@ -156,17 +180,16 @@ public class SupplyService {
     return products;
   }
 
-  private List<Product> saveProductsWhichWereDeliveredBySupply(List<ProductPerSupply> supplyList) {
-    List<Product> products = new ArrayList<>();
-
+  private void saveProductsWhichWereDeliveredBySupply(List<ProductPerSupply> supplyList) {
     for (int i = 0; i < supplyList.size(); i++) {
       ProductPerSupply productPerSupply = supplyList.get(i);
-      Optional<Product> product = productRepository.updateAmountOfProductIfExists(productPerSupply.getAmount(),
-                                                                                  productPerSupply.getName(),
-                                                                                  productPerSupply.getPricePerOne());
-      if (product.isPresent()) {
-        products.add(product.get());
-      } else {
+      // check if product exists
+      Optional<Product> product = productRepository.updateAmountOfProductIfExists(
+          productPerSupply.getAmount(),
+          productPerSupply.getName(),
+          productPerSupply.getPricePerOne());
+      if (!product.isPresent()) {
+        // save new product
         product = Optional.of(Product.builder()
             .name(productPerSupply.getName())
             .pricePerOne(productPerSupply.getPricePerOne())
@@ -175,10 +198,8 @@ public class SupplyService {
 
         productRepository.save(product.get());
 
-        products.add(product.get());
       }
     }
-    return products;
   }
 
 }
