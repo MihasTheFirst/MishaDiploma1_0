@@ -27,6 +27,14 @@
       <input type="text" th:value="${idOfSupplier}" name="idOfSupplier" placeholder="Введіть ідентифікатор постачальника" class="form-control"><br>
       <div th:each="el : ${products}">
         <h5 th:text="${el.name}"></h5>
+        <select name="measures" class="form-select" aria-label="Floating label select example">
+          <option th:value="${el.measure}" th:selected="${el.measure != null}" th:text="${el.measure}">Оберіть одиницю виміру</option>
+          <option value="KG">Кілограм</option>
+          <option value="G">Грам</option>
+          <option value="PCS">Одиниця</option>
+          <option value="L">Літр</option>
+          <option value="ML">Мілілітр</option>
+        </select><br>
 <!--        <input type="text" th:value="${el.name}" name="name" placeholder="Введіть назву товару" class="form-control"><br>-->
         <input type="text" th:value="${el.pricePerOne}" name="price" placeholder="Введіть ціну товару" class="form-control"><br>
         <input type="text" th:value="${el.amount}" name="quantity" placeholder="Введіть кількість постачальника" class="form-control"><br>

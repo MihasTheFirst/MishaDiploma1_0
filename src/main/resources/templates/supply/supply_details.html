@@ -26,7 +26,7 @@
         <h1 th:text="${el.getSupplier().getName()}"/>
         <h2 th:text="${#temporals.format(el.getDate(), 'dd.MM.yyyy')}"/>
       <div th:each="product : ${el.getProducts()}" class="alert alert-info mt-3">
-           <p th:text="${product.getName()} + ': ' + ${product.getAmount()} + 'шт, ' + ${product.getPricePerOne()} + '$'"/>
+           <p th:text="${product.getName()} + ': ' + ${product.getAmount()} + ' '+ ${product.getMeasure()} + ', ' + ${product.getPricePerOne()} + '$'"/>
          </div>
 <!--      <p><b>Просмотры</b> <span th:text="${el.views}"/></p>-->
       <form method="post">

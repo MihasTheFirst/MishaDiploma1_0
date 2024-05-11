@@ -1,7 +1,6 @@
 package com.example.mishadiploma1_0.controllers;
 
-import com.example.mishadiploma1_0.entity.Supplier;
-import com.example.mishadiploma1_0.entity.Supply;
+import com.example.mishadiploma1_0.entity.*;
 import com.example.mishadiploma1_0.serviceces.SupplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 
 @Controller
 public class SupplyController {
@@ -36,8 +36,9 @@ public class SupplyController {
                                 @RequestParam Long idOfSupplier,
                                 @RequestParam List<String> name,
                                 @RequestParam List<BigDecimal> price,
-                                @RequestParam List<Long> quantity) {
-    supplyService.addNewSupply(idOfSupplier, name, price, quantity);
+                                @RequestParam List<Long> quantity,
+                                @RequestParam List<Measure> measures) {
+    supplyService.addNewSupply(idOfSupplier, name, price, quantity, measures);
     return "redirect:/supply/all";
   }
   @GetMapping("/supply/all")
@@ -49,7 +50,7 @@ public class SupplyController {
 
   @GetMapping("/supply/{id}/edit")
   public String editTheExistingSupplyPage(@PathVariable Long id,
-                                      Model model) {
+                                          Model model) {
     Supply supply = supplyService.getSupply(id);
     model.addAttribute("products", supply.getProducts())
         .addAttribute("idOfSupplier", supply.getSupplier().getId())
@@ -62,8 +63,9 @@ public class SupplyController {
       @PathVariable Long id,
       @RequestParam Long idOfSupplier,
       @RequestParam List<Long> quantity,
-      @RequestParam List<BigDecimal> price) {
-    supplyService.updateExistingSupply(id, idOfSupplier, price, quantity);
+      @RequestParam List<BigDecimal> price,
+      @RequestParam List<Measure> measures) {
+    supplyService.updateExistingSupply(id, idOfSupplier, price, quantity, measures);
     return "redirect:/supply/all";
   }
 

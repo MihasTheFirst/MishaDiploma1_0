@@ -1,26 +1,24 @@
 package com.example.mishadiploma1_0.serviceces;
 
-import com.example.mishadiploma1_0.entity.Product;
-import com.example.mishadiploma1_0.entity.ProductPerSupply;
-import com.example.mishadiploma1_0.entity.Supplier;
-import com.example.mishadiploma1_0.entity.Supply;
+import com.example.mishadiploma1_0.entity.*;
 import com.example.mishadiploma1_0.repositories.ProductPerSupplyRepository;
 import com.example.mishadiploma1_0.repositories.ProductRepository;
 import com.example.mishadiploma1_0.repositories.SupplierRepository;
 import com.example.mishadiploma1_0.repositories.SupplyRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static com.example.mishadiploma1_0.serviceces.util.SupplyUtil.getMeasure;
+import static com.example.mishadiploma1_0.serviceces.util.SupplyUtil.getMeasures;
 
 @Service
 public class SupplyService {
@@ -38,7 +36,8 @@ public class SupplyService {
   public void addNewSupply(Long idOfSupplier,
                            List<String> name,
                            List<BigDecimal> price,
-                           List<Long> quantity) {
+                           List<Long> quantity,
+                           List<Measure> stringMeasures) {
     // find Suplier by id
     Supplier supplier = this.findSupplierById(idOfSupplier);
 
@@ -50,9 +49,12 @@ public class SupplyService {
 
     // save the Supply in db
     Supply savedSupply = supplyRepository.save(supply);
-
     // create list ProductPerSupply from names, prices, quantities
-    List<ProductPerSupply> products = this.getListOfProducts(savedSupply, name, price, quantity);
+    List<ProductPerSupply> products = this.getListOfProducts(savedSupply,
+                                                             name,
+                                                             price,
+                                                             quantity,
+                                                             stringMeasures);
     savedSupply.setProducts(products);
 
     // updaete Supply with set ProductPerSupply
@@ -71,7 +73,7 @@ public class SupplyService {
   }
 
   public void updateExistingSupply(Long id, Long idOfSupplier, List<BigDecimal> price,
-      List<Long> quantity) {
+      List<Long> quantity, List<Measure> measures) {
     // find Supply by id
     Supply supplyFromDb = this.getSupply(id);
 
@@ -92,10 +94,12 @@ public class SupplyService {
 
     // create updated ProductPerSupply and save it
     List<ProductPerSupply> products = this.getListOfProducts(supplyFromDb,
-        savedProductPerSupply.stream().map(ProductPerSupply::getName).collect(
-        Collectors.toList()),
-        price,
-        quantity);
+                                                             savedProductPerSupply.stream()
+                                                                                  .map(ProductPerSupply::getName)
+                                                                                  .collect(Collectors.toList()),
+                                                             price,
+                                                             quantity,
+                                                             measures);
     supplyFromDb.setProducts(products);
 
     // save updated Supply with new ProductPerSupply
@@ -138,7 +142,8 @@ public class SupplyService {
           newAmount,
           savedProducts.get(i).getName(),
           savedProducts.get(i).getPricePerOne(),
-          newProducts.get(i).getPricePerOne());
+          newProducts.get(i).getPricePerOne(),
+          newProducts.get(i).getMeasure().getMeasure());
     }
   }
 
@@ -149,7 +154,8 @@ public class SupplyService {
           products.get(i).getAmount() * -1,
           products.get(i).getName(),
           products.get(i).getPricePerOne(),
-          products.get(i).getPricePerOne());
+          products.get(i).getPricePerOne(),
+          products.get(i).getMeasure().getMeasure());
     }
     try {
       productRepository.removeEmptySpaces();
@@ -161,17 +167,19 @@ public class SupplyService {
   private List<ProductPerSupply> getListOfProducts(Supply supply,
                                                    List<String> name,
                                                    List<BigDecimal> price,
-                                                   List<Long> quantity) {
+                                                   List<Long> quantity,
+                                                   List<Measure> measures) {
     List<ProductPerSupply> products = new ArrayList<>();
 
     int size = name.size();
     for (int i = 0; i < size; i++) {
         ProductPerSupply product = ProductPerSupply.builder()
-            .name(name.get(i))
-            .pricePerOne(price.get(i))
-            .amount(quantity.get(i))
-            .supply(supply)
-            .build();
+                                                   .name(name.get(i))
+                                                   .pricePerOne(price.get(i))
+                                                   .amount(quantity.get(i))
+                                                   .supply(supply)
+                                                   .measure(measures.get(i))
+                                                   .build();
 
         productPerSupplyRepository.save(product);
         products.add(product);
@@ -194,7 +202,8 @@ public class SupplyService {
             .name(productPerSupply.getName())
             .pricePerOne(productPerSupply.getPricePerOne())
             .amount(productPerSupply.getAmount())
-            .build());
+            .measure(productPerSupply.getMeasure())
+                .build());
 
         productRepository.save(product.get());
 
