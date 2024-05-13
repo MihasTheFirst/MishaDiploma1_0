@@ -1,7 +1,9 @@
 package com.example.mishadiploma1_0.controllers;
 
+import com.example.mishadiploma1_0.entity.Measure;
 import com.example.mishadiploma1_0.entity.Product;
 import com.example.mishadiploma1_0.entity.Supplier;
+import com.example.mishadiploma1_0.entity.Supply;
 import com.example.mishadiploma1_0.serviceces.StorageService;
 import com.example.mishadiploma1_0.serviceces.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 public class StorageController {
