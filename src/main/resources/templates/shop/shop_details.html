@@ -24,7 +24,7 @@
 
 <!--  Просотр деталей поставщика -->
   <div class="container mt-5">
-    <div th:each="el : ${shop}" class="alert alert-info mt-2">
+    <div th:each="el : ${shops}" class="alert alert-info mt-2">
       <h1 th:text="${el.name}"/>
       <p> Адреса: <span th:text="${el.address}"></span></p>
       <p> Системний ідентифікаційний номер: <span th:text="${el.id}"></span></p>
