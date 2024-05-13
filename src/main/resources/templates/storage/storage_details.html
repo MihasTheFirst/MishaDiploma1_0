@@ -19,8 +19,12 @@
     <a class="me-3 py-2 text-dark text-decoration-none" href="/supply">Поставка</a>
   </nav>
 </div>
-<div th:each= "el : ${products}" class="alert alert-info mt-2">
-    <p th:text="${el.getName()} + ': ' + ${el.getAmount()} + ' ' + ${el.getMeasure()} +   ', ' + ${el.getPricePerOne()} + '$'"/>
+<div th:each= "el : ${products}">
+  <div th:if="${el.getAmount()} != 0">
+      <div class="alert alert-info mt-2">
+        <p th:text="${el.getName()} + ': ' + ${el.getAmount()} + ' ' + ${el.getMeasure()} +   ', ' + ${el.getPricePerOne()} + '$'"/>
+      </div>
+    </div>
 </div>
 <!--  Просотр деталей поставщика -->
 

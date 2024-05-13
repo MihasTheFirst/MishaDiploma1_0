@@ -54,6 +54,14 @@
             container.className = 'productContainer';
             container.innerHTML = `
                 <input type="text" name="name" placeholder="Зазначте ім'я товару" class="form-control"><br>
+                <h6>Одиниця виміру</h6>
+                <select name="measures" class="form-select" aria-label="Floating label select example">
+                    <option value="KG">Кілограм</option>
+                    <option value="G">Грам</option>
+                    <option value="PCS">Одиниця</option>
+                    <option value="L">Літр</option>
+                    <option value="ML">Мілілітр</option>
+                </select><br>
                 <input type="text" name="price" placeholder="Зазначте ціну" class="form-control"><br>
                 <input type="text" name="quantity" placeholder="Зазначте кількість" class="form-control"><br>
             `;

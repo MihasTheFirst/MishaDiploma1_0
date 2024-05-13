@@ -51,8 +51,9 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
   @Query(value = """
       UPDATE product SET amount = amount - :amount
       WHERE name = :name
+      RETURNING id, name, amount, measure, price_per_one;
   """, nativeQuery = true)
-  void removeSomeProducts(@Param("name") String name,
+  Optional<Product> removeSomeProducts(@Param("name") String name,
                           @Param("amount") Long amount);
 
   @Query(value = """

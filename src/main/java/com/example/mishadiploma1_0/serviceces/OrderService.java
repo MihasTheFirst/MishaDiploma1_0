@@ -55,9 +55,7 @@ public class OrderService {
         orderRepository.save(savedOrder);
 
         // update values in storage
-        try {
-            this.saveProductsWhichWereTransferredForOrder(products);
-        } catch (Exception ex) { }
+        this.saveProductsWhichWereTransferredForOrder(products);
     }
 
     // create list of ProductPerSupply from lists of names, prices and quantities

@@ -32,7 +32,7 @@
         <input type="text" th:value="${el.pricePerOne}" name="price" placeholder="Введіть ціну товару" class="form-control"><br>
 <!--        <input type="text" th:value="${el.amount}" name="quantity" placeholder="Введіть кількість постачальника" class="form-control"><br>-->
                   <label for="amount" class="form-label">Обрати кількість: <span th:id="|amountValue_${iter.index}|"></span></label>
-                  <input type="range" class="form-range" min="0" th:max="${el.getAmount()}" th:id="|amount_${iter.index}|" th:name="quantity">
+                  <input type="range" class="form-range" min="0" th:max="${n.getAmount()}" th:id="|amount_${iter.index}|" th:name="quantity">
               </div>
               </div>
           </div>
