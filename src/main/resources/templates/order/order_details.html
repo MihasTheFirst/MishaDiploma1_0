@@ -20,17 +20,18 @@
     </nav>
   </div>
 
-<!--  Просотр деталей поставщика -->
+  <!--  Просотр деталей поставки -->
   <div class="container mt-5">
-    <div th:each= "el : ${products}" class="alert alert-info mt-2">
-        <h1 th:text="${el.getName()} + ' ' + ${el.getMeasure()}"/>
+    <div th:each= "el : ${orders}" class="alert alert-info mt-2">
+      <h1 th:text="${el.getShop().getName()}"/>
+      <h2 th:text="${#temporals.format(el.getDate(), 'dd.MM.yyyy')}"/>
       <div th:each="product : ${el.getProducts()}" class="alert alert-info mt-3">
-           <p th:text="${product.getName()} + ': ' + ${product.getAmount()} + ' '+ ${product.getMeasure()} + ', ' + ${product.getPricePerOne()} + '$'"/>
-         </div>
-<!--      <p><b>Просмотры</b> <span th:text="${el.views}"/></p>-->
+        <p th:text="${product.getName()} + ': ' + ${product.getAmount()} + ' '+ ${product.getMeasure()} + ', ' + ${product.getPricePerOne()} + '$'"/>
+      </div>
+      <!--      <p><b>Просмотры</b> <span th:text="${el.views}"/></p>-->
       <form method="post">
-        <a th:href="'/supply/' + ${el.id} + '/edit'" class="btn btn-warning">Редагувати</a>
-        <a th:href="'/supply/' + ${el.id} + '/delete'" class="btn btn-warning">Видалити</a>
+        <a th:href="'/order/' + ${el.id} + '/edit'" class="btn btn-warning">Редагувати</a>
+        <a th:href="'/order/' + ${el.id} + '/delete'" class="btn btn-warning">Видалити</a>
       </form>
     </div>
   </div>

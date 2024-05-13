@@ -103,7 +103,7 @@ public class SupplyService {
     supplyFromDb.setProducts(products);
 
     // save updated Supply with new ProductPerSupply
-    supplyRepository.save(supplyFromDb);
+      supplyRepository.save(supplyFromDb);
 
     // update values in the Storage
     this.updateQuantityOfProduct(savedProductPerSupply, products);
@@ -143,7 +143,7 @@ public class SupplyService {
           savedProducts.get(i).getName(),
           savedProducts.get(i).getPricePerOne(),
           newProducts.get(i).getPricePerOne(),
-          newProducts.get(i).getMeasure().getMeasure());
+          newProducts.get(i).getMeasure().name());
     }
   }
 
@@ -155,7 +155,7 @@ public class SupplyService {
           products.get(i).getName(),
           products.get(i).getPricePerOne(),
           products.get(i).getPricePerOne(),
-          products.get(i).getMeasure().getMeasure());
+          products.get(i).getMeasure().name());
     }
     try {
       productRepository.removeEmptySpaces();

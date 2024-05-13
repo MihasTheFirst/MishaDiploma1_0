@@ -1,21 +1,16 @@
 package com.example.mishadiploma1_0.controllers;
 
-import com.example.mishadiploma1_0.entity.Measure;
-import com.example.mishadiploma1_0.entity.Order;
-import com.example.mishadiploma1_0.entity.Product;
-import com.example.mishadiploma1_0.entity.Supply;
+import com.example.mishadiploma1_0.entity.*;
 import com.example.mishadiploma1_0.serviceces.OrderService;
 import com.example.mishadiploma1_0.serviceces.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class OrderController {
@@ -46,20 +41,46 @@ public class OrderController {
                                @RequestParam List<Long> quantity,
                                @RequestParam List<Measure> measures) {
     orderService.createNewOrder(idOfShop, name, price, quantity, measures);
-    // TODO: call StorageController.deleteProducts
-    return null;
+    return "redirect:/order/all";
   }
 
   @GetMapping("/order/all")
   public String getAllOrders(Model model) {
-    return null;
+    Iterable<Order> orders = orderService.findAllOfTheOrders();
+    model.addAttribute("orders", orders);
+    return "order/order_details";
   }
 
-  @GetMapping("/order/edit")
-  public String editExistingOrder(Model model) {
-    // Keep in mind that if quantity or the products themselves change,
-    // it should be seen in Product db
-    return null;
+  @GetMapping("/order/{id}/edit")
+  public String editTheExistingOrderPage(@PathVariable Long id,
+                                         Model model) {
+    Order order = orderService.getOrderById(id);
+    Iterable<Product> productsAmount = storageService.getAllProductsByName(order.getProducts()
+                                                                                .stream()
+                                                                                .map(ProductPerOrder::getName)
+                                                                                .collect(Collectors.toList()));
+    model.addAttribute("products", order.getProducts())
+         .addAttribute("idOfShop", order.getShop().getId())
+         .addAttribute("productsAmount", productsAmount)
+         .addAttribute("id", order.getId());
+    return "order/order_edit";
+  }
+
+  @PostMapping("/order/{id}/edit")
+  public String editTheExistingSupply(Model model,
+                                      @PathVariable Long id,
+                                      @RequestParam Long idOfShop,
+                                      @RequestParam List<Long> quantity,
+                                      @RequestParam List<BigDecimal> price) {
+    orderService.updateExistingOrder(id, idOfShop, quantity, price);
+    return "redirect:/order/all";
+  }
+
+  @GetMapping("/order/{id}/delete")
+  public String deleteSupply(@PathVariable Long id,
+                             Model model) {
+    orderService.deleteOrder(id);
+    return "redirect:/order/all";
   }
 
 

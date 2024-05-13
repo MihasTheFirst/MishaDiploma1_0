@@ -25,23 +25,27 @@
     <h1>Редугування поставки</h1>
     <form action="/order/new" method="post">
         <input type="text" name="idOfShop" placeholder="Зазначте id магазину" class="form-control"><br>
-        <div th:each="el : ${products}">
+        <div th:each="el, iter : ${products}">
             <input type="text" th:value="${el.name}" name="name" th:placeholder="${el.name}" class="form-control" readonly><br>
             <input type="text" th:value="${el.pricePerOne}" name="price" th:placeholder="${el.pricePerOne}" class="form-control"><br>
             <input type="text" th:value="${el.measure}" name="measures" th:placeholder="${el.measure}" class="form-control" readonly><br>
-            <label for="amount" class="form-label">Обрати кількість: <span id="amountValue"></span></label>
-            <input type="range" class="form-range" min="0" th:max="${el.getAmount()}" id="amount" name="quantity">
+            <label for="amount" class="form-label">Обрати кількість: <span th:id="|amountValue_${iter.index}|"></span></label>
+            <input type="range" class="form-range" min="0" th:max="${el.getAmount()}" th:id="|amount_${iter.index}|" th:name="quantity">
         </div>
         <button type="submit" class="btn btn-success">Відправити</button>
     </form>
 </div>
 
-<script>
-    const rangeInput = document.getElementById('amount');
-    const amountValue = document.getElementById('amountValue');
+<script th:inline="javascript">
+    const rangeInputs = document.querySelectorAll('input[type="range"]');
+    const amountValues = document.querySelectorAll('span[id^="amountValue_"]');
 
-    rangeInput.addEventListener('input', function() {
-        amountValue.textContent = this.value;   
+    rangeInputs.forEach((rangeInput, index) => {
+        const amountValue = amountValues[index];
+
+        rangeInput.addEventListener('input', function() {
+            amountValue.textContent = this.value;
+        });
     });
 </script>
 

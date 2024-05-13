@@ -20,29 +20,38 @@
     </nav>
   </div>
 
-<!-- Форма обновления поставщика -->
+<!-- Форма обновления замовлення -->
   <div class="container mt-5 mb-5">
-    <h1>Редугування поставки</h1>
+    <h1>Редугування Замовлення</h1>
     <form method="post">
-      <input type="text" th:value="${idOfSupplier}" name="idOfSupplier" placeholder="Введіть ідентифікатор постачальника" class="form-control"><br>
-      <div th:each="el : ${products}">
-        <h5 th:text="${el.name}"></h5>
-        <select name="measures" class="form-select" aria-label="Floating label select example">
-          <option th:value="${el.measure}" th:selected="${el.measure != null}" th:text="${el.measure}">Оберіть одиницю виміру</option>
-          <option value="KG">Кілограм</option>
-          <option value="G">Грам</option>
-          <option value="PCS">Одиниця</option>
-          <option value="L">Літр</option>
-          <option value="ML">Мілілітр</option>
-        </select><br>
-<!--        <input type="text" th:value="${el.name}" name="name" placeholder="Введіть назву товару" class="form-control"><br>-->
+      <input type="text" th:value="${idOfShop}" name="idOfShop" placeholder="Введіть ідентифікатор постачальника" class="form-control"><br>
+        <div th:each="el, iter : ${products}">
+            <div th:each="n : ${productsAmount}">
+              <div th:if="${el.getName()} == ${n.getName()}">
+        <h5 th:text="${el.name} + ', ' + ${el.measure}"></h5><br>
         <input type="text" th:value="${el.pricePerOne}" name="price" placeholder="Введіть ціну товару" class="form-control"><br>
-        <input type="text" th:value="${el.amount}" name="quantity" placeholder="Введіть кількість постачальника" class="form-control"><br>
-<!--        <textarea name="full_text" placeholder="Ведите полный текст статьи" class="form-control" th:text="${el.full_text}"/><br>-->
-      </div>
+<!--        <input type="text" th:value="${el.amount}" name="quantity" placeholder="Введіть кількість постачальника" class="form-control"><br>-->
+                  <label for="amount" class="form-label">Обрати кількість: <span th:id="|amountValue_${iter.index}|"></span></label>
+                  <input type="range" class="form-range" min="0" th:max="${el.getAmount()}" th:id="|amount_${iter.index}|" th:name="quantity">
+              </div>
+              </div>
+          </div>
       <button type="submit" class="btn btn-success">Оновити</button>
     </form>
   </div>
+
+  <script th:inline="javascript">
+      const rangeInputs = document.querySelectorAll('input[type="range"]');
+      const amountValues = document.querySelectorAll('span[id^="amountValue_"]');
+
+      rangeInputs.forEach((rangeInput, index) => {
+          const amountValue = amountValues[index];
+
+          rangeInput.addEventListener('input', function() {
+              amountValue.textContent = this.value;
+          });
+      });
+  </script>
 
 </body>
 </html>

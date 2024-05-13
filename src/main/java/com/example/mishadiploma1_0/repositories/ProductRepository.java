@@ -3,6 +3,7 @@ package com.example.mishadiploma1_0.repositories;
 import com.example.mishadiploma1_0.entity.Measure;
 import com.example.mishadiploma1_0.entity.Product;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -46,4 +47,25 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
       DELETE FROM product WHERE amount = 0
   """, nativeQuery = true)
   void removeEmptySpaces();
+
+  @Query(value = """
+      UPDATE product SET amount = amount - :amount
+      WHERE name = :name
+  """, nativeQuery = true)
+  void removeSomeProducts(@Param("name") String name,
+                          @Param("amount") Long amount);
+
+  @Query(value = """
+      UPDATE product SET amount = amount + :amount
+      WHERE name = :name
+      RETURNING id, name, amount, measure, price_per_one;
+  """, nativeQuery = true)
+  Optional<Product> updateAmountAndPriceOfProductIfExists(@Param("name") String name,
+                                                          @Param("amount") Long amount);
+
+  @Query(value = """
+  SELECT * FROM product
+  WHERE name IN (:names)
+  """, nativeQuery = true)
+  Iterable<Product> findAllByName(List<String> names);
 }
