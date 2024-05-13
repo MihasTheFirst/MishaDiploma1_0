@@ -29,7 +29,7 @@ public class ShopController {
                                @RequestParam String name,
                                @RequestParam String address) {
     Shop shop = shopService.addNewShop(name, address);
-    return "redirect:/order/shop/" + shop.getId();
+    return "redirect:/order/shop/all";
   }
 
   @GetMapping("/order/shop/{id}/edit")
@@ -46,7 +46,7 @@ public class ShopController {
                                         @RequestParam String name,
                                         @RequestParam String address) {
     Shop shop = shopService.updateExistingShop(id, name, address);
-    return "redirect:/order/shop/" + shop.getId();
+    return "redirect:/order/shop/all";
   }
 
   @GetMapping("/order/shop/{id}")
@@ -67,7 +67,7 @@ public class ShopController {
   @GetMapping("/order/shop/{id}/delete")
   public String deleteTheSupplier(Model model, @PathVariable("id") Long id) {
     shopService.deleteShop(id);
-    return "redirect:/order/shop";
+    return "redirect:/order/shop/all";
   }
 
 
