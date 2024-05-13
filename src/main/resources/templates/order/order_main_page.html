@@ -16,10 +16,23 @@
     </a>
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-      <a class="me-3 py-2 text-dark text-decoration-none" href="/order/shop">Замовник</a>
+      <a class="me-3 py-2 text-dark text-decoration-none" href="/order/shop">Магазин</a>
     </nav>
   </div>
 
-  <p th:text="'Hello, ' + ${title} + '!'"></p>
+  <!--  Панель управления поставкой -->
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Поставки в магазин</h1>
+        <p class="lead text-muted">Текст про поставки в магазин.</p>
+        <p>
+          <a href="/order/new" class="btn btn-primary my-2">Додати замовлення</a>
+          <a href="/order/all" class="btn btn-secondary my-2">Подивитися всі замовлення</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
 </body>
 </html>

@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 public class StorageService {
     @Autowired
     private ProductRepository StorageRepository;
-
-
     public Iterable<Product> getAllProducts() {
         return StorageRepository.findAll();
     }

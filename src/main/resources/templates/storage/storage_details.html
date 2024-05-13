@@ -20,7 +20,7 @@
   </nav>
 </div>
 <div th:each= "el : ${products}" class="alert alert-info mt-2">
-    <p th:text="${el.getName()} + ': ' + ${el.getAmount()} + 'шт, ' + ${el.getPricePerOne()} + '$'"/>
+    <p th:text="${el.getName()} + ': ' + ${el.getAmount()} + ' ' + ${el.getMeasure()} +   ', ' + ${el.getPricePerOne()} + '$'"/>
 </div>
 <!--  Просотр деталей поставщика -->
 
