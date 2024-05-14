@@ -30,10 +30,10 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     public void createNewOrder(Long idOfShop,
-                                                List<String> name,
-                                                List<BigDecimal> price,
-                                                List<Long> quantity,
-                                                List<Measure> measures) {
+                               List<String> name,
+                               List<BigDecimal> price,
+                               List<Long> quantity,
+                               List<Measure> measures) {
         // find Shop by id
         Shop shop = shopService.getShop(idOfShop);
 
@@ -61,10 +61,10 @@ public class OrderService {
     // create list of ProductPerSupply from lists of names, prices and quantities
     // that we get from UI
     private List<ProductPerOrder> getListOfProducts(Order order,
-                                                     List<String> name,
-                                                     List<BigDecimal> price,
-                                                     List<Long> quantity,
-                                                     List<Measure> measures) {
+                                                    List<String> name,
+                                                    List<BigDecimal> price,
+                                                    List<Long> quantity,
+                                                    List<Measure> measures) {
         List<ProductPerOrder> products = new ArrayList<>();
 
         int size = name.size();
@@ -89,9 +89,9 @@ public class OrderService {
     private void saveProductsWhichWereTransferredForOrder(List<ProductPerOrder> orderList) {
         for (int i = 0; i < orderList.size(); i++) {
             ProductPerOrder productPerSupply = orderList.get(i);
-                // remove some products
-                productRepository.removeSomeProducts(productPerSupply.getName(),
-                                                     productPerSupply.getAmount());
+            // remove some products
+            productRepository.removeSomeProducts(productPerSupply.getName(),
+                    productPerSupply.getAmount());
 
         }
     }
@@ -102,7 +102,7 @@ public class OrderService {
 
     public Order getOrderById(Long id) {
         return orderRepository.findById(id)
-                              .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(NoSuchElementException::new);
     }
 
     public void updateExistingOrder(Long id, Long idOfShop, List<Long> quantity, List<BigDecimal> price) {
@@ -119,21 +119,22 @@ public class OrderService {
         try {
             // delete orderFromDb to create it anew
             productPerOrderRepository.deleteByOrderId(orderFromDb.getId());
-        } catch (Exception ex) { }
+        } catch (Exception ex) {
+        }
 
         // create new Supply with new parameters
         orderRepository.save(orderFromDb);
 
         // create updated ProductPerSupply and save it
         List<ProductPerOrder> products = this.getListOfProducts(orderFromDb,
-                                                                savedProductPerOrder.stream()
-                                                                                    .map(ProductPerOrder::getName)
-                                                                                    .collect(Collectors.toList()),
-                                                                price,
-                                                                quantity,
-                                                                savedProductPerOrder.stream()
-                                                                        .map(ProductPerOrder::getMeasure)
-                                                                        .collect(Collectors.toList()));
+                savedProductPerOrder.stream()
+                        .map(ProductPerOrder::getName)
+                        .collect(Collectors.toList()),
+                price,
+                quantity,
+                savedProductPerOrder.stream()
+                        .map(ProductPerOrder::getMeasure)
+                        .collect(Collectors.toList()));
         orderFromDb.setProducts(products);
 
         // save updated Supply with new ProductPerSupply
@@ -145,9 +146,46 @@ public class OrderService {
 
     private void updateQuantityOfProduct(List<ProductPerOrder> savedProducts,
                                          List<ProductPerOrder> newProducts) {
-        for(int i = 0; i < newProducts.size(); i++) {
-            long newAmount = savedProducts.get(i).getAmount() - newProducts.get(i).getAmount() ;
-            this.productRepository.updateAmountAndPriceOfProductIfExists(savedProducts.get(i).getName(), newAmount);
+//        int i = 0;
+//        try {
+//            for (; i < savedProducts.size(); i++) {
+//                if (newProducts.get(i) != null) {
+//                    long savedAmount = savedProducts.get(i).getAmount();
+//                    long newAmount = newProducts.get(i).getAmount();
+//                    long difference = 0;
+//                    if (savedAmount > newAmount) {
+//                        difference = savedAmount - newAmount;
+//                    } else if (savedAmount < newAmount) {
+//                        difference = savedAmount - newAmount;
+//                    }
+//                    this.productRepository.updateAmountAndPriceOfProductIfExists(savedProducts.get(i).getName(), difference);
+//                }
+//            }
+//        }
+//        catch (ArrayIndexOutOfBoundsException ex) {
+//            // 0
+//            this.productRepository.updateAmountAndPriceOfProductIfExists(savedProducts.get(i).getName(), savedProducts.get(i).getAmount());
+//        }
+
+        for (int i = 0; i < savedProducts.size(); i++) {
+            for (int k = 0; k < newProducts.size(); k++) {
+                if (savedProducts.get(i).getName().equals(newProducts.get(k).getName())) {
+                    long savedAmount = savedProducts.get(i).getAmount();
+                    long newAmount = newProducts.get(i).getAmount();
+                    long difference = 0;
+                    if (savedAmount > newAmount) {
+                        difference = savedAmount - newAmount;
+                    } else if (savedAmount < newAmount) {
+                        difference = savedAmount - newAmount;
+                    }
+                    this.productRepository.updateAmountAndPriceOfProductIfExists(savedProducts.get(i).getName(), difference);
+                }
+            }
+        }
+
+        for (int k = newProducts.size(); k < savedProducts.size(); k++) {
+            this.productRepository.updateAmountAndPriceOfProductIfExists(savedProducts.get(k).getName(), savedProducts.get(k).getAmount());
+
         }
     }
 
@@ -164,7 +202,8 @@ public class OrderService {
         try {
             // delete ProductPerOrder by id
             productPerOrderRepository.deleteByOrderId(id);
-        } catch (Exception ex) { }
+        } catch (Exception ex) {
+        }
 
         // delete Order
         orderRepository.deleteById(id);
@@ -172,14 +211,15 @@ public class OrderService {
 
     // Update values in the Storage if Supply were deleted
     private void updateQuantityOfProductDel(List<ProductPerOrder> products) {
-        for(int i = 0; i < products.size(); i++) {
+        for (int i = 0; i < products.size(); i++) {
             productRepository.updateAmountAndPriceOfProductIfExists(
                     products.get(i).getName(),
                     products.get(i).getAmount());
         }
         try {
             productRepository.removeEmptySpaces();
-        } catch (Exception ex) { }
+        } catch (Exception ex) {
+        }
     }
 
 }

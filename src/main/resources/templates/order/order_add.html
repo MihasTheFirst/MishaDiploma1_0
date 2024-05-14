@@ -33,7 +33,7 @@
                 <input type="text" th:value="${el.pricePerOne}" name="price" th:placeholder="${el.pricePerOne}" class="form-control"><br>
                 <input type="text" th:value="${el.measure}" name="measures" th:placeholder="${el.measure}" class="form-control" readonly><br>
                 <label for="amount" class="form-label">Обрати кількість: <span th:id="|amountValue_${iter.index}|"></span></label>
-                <input type="range" class="form-range" min="0" th:max="${el.getAmount()}" th:id="|amount_${iter.index}|" th:name="quantity">
+                <input type="range" class="form-range" min="0" th:max="${el.getAmount()}" th:id="|amount_${iter.index}|" th:name="quantity" value="0">
             </div>
         </div>
         <button type="submit" class="btn btn-success">Відправити</button>
